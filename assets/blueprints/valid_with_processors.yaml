@@ -1,0 +1,63 @@
+version: "1.0"
+meta:
+  file:
+    extension: xlsx
+    name: "sample"
+blueprint:
+  - name: header_info
+    mandatory: true
+    type: hit
+    conditions:
+      - column: [1]
+        is: "Cashier Number"
+    fields:
+      - name: currency
+        position: 6
+      - name: cashier
+        position: 2
+        type: int
+  - name: balance_info
+    type: hit
+    mandatory: true
+    conditions:
+      - column: [4]
+        is: "Open Balance"
+    fields:
+      - name: opening_balance
+        position: 6
+        format: f%2
+  - name: transaction_table
+    type: hit
+    mandatory: true
+    table: true
+    conditions:
+      - column: [1]
+        isNot: "{null}"
+    fields:
+      - name: date
+        position: 1
+      - name: type
+        position: 2
+      - name: document_number
+        position: 3
+        type: int
+      - name: description
+        position: 4
+      - name: reference_number
+        position: 5
+        type: int
+      - name: credit
+        position: 6
+        format: f%2
+      - name: debit
+        position: 7
+        format: f%2
+  - name: total
+    type: next
+    fields:
+      - name: total_credit
+        position: 6
+        format: f%2
+      - name: total_debit
+        position: 7
+        format: f%2

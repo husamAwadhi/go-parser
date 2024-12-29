@@ -1,0 +1,42 @@
+version: "1.0"
+meta:
+  file:
+    extension: xlsx
+blueprint:
+  - mandatory: true
+    type: hit
+    conditions:
+      - column: [1]
+        is: "رقم الصندوق"
+    fields:
+      - name: currency
+        position: 6
+      - name: cashier
+        position: 2
+  - type: hit
+    mandatory: true
+    table: true
+    conditions:
+      - column: [1]
+        isNot: null
+    fields:
+      - name: date
+        position: 1
+      - name: type
+        position: 2
+      - name: document number
+        position: 3
+      - name: description
+        position: 4
+      - name: reference number
+        position: 5
+      - name: credit
+        position: 6
+      - name: debit
+        position: 7
+  - type: next
+    fields:
+      - name: total_credit
+        position: 6
+      - name: total_debit
+        position: 7

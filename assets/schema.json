@@ -1,0 +1,150 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "$ref": "#/definitions/Root",
+    "definitions": {
+        "Root": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "version": {
+                    "type": "string"
+                },
+                "meta": {
+                    "$ref": "#/definitions/Meta"
+                },
+                "blueprint": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Blueprint"
+                    }
+                }
+            },
+            "required": [
+                "blueprint",
+                "meta",
+                "version"
+            ],
+            "title": "Root"
+        },
+        "Blueprint": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "mandatory": {
+                    "type": "boolean"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "conditions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Condition"
+                    }
+                },
+                "fields": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Field"
+                    }
+                },
+                "table": {
+                    "type": "boolean"
+                }
+            },
+            "required": [
+                "fields",
+                "name",
+                "type"
+            ],
+            "title": "Blueprint"
+        },
+        "Condition": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "column": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "is": {
+                    "type": "string"
+                },
+                "isNot": {
+                    "type": "string"
+                },
+                "anyOf": {
+                    "type": "string"
+                },
+                "noneOf": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "column"
+            ],
+            "title": "Condition"
+        },
+        "Field": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "name": {
+                    "type": [
+                        "string",
+                        "integer"
+                    ]
+                },
+                "position": {
+                    "type": "integer"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "format": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "name",
+                "position"
+            ],
+            "title": "Field"
+        },
+        "Meta": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "file": {
+                    "$ref": "#/definitions/File"
+                }
+            },
+            "required": [
+                "file"
+            ],
+            "title": "Meta"
+        },
+        "File": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "extension": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "extension",
+                "name"
+            ],
+            "title": "File"
+        }
+    }
+}

@@ -1,0 +1,48 @@
+version: "1.0"
+meta:
+  file:
+    extension: csv
+    name: "sample"
+blueprint:
+  - name: header
+    mandatory: true
+    type: hit
+    conditions:
+      - column: [1]
+        is: "number"
+    fields:
+      - name: 0
+        position: 1
+      - name: 1
+        position: 2
+      - name: 2
+        position: 3
+      - name: 3
+        position: 4
+      - name: 4
+        position: 5
+      - name: 5
+        position: 6
+      - name: 6
+        position: 7
+  - name: info
+    type: hit
+    mandatory: true
+    conditions:
+      - column: [1]
+        is: "{null}"
+    fields:
+      - name: 0
+        position: 1
+      - name: 1
+        position: 2
+      - name: 2
+        position: 3
+      - name: 3
+        position: 4
+      - name: 4
+        position: 5
+      - name: 5
+        position: 6
+      - name: 6
+        position: 7

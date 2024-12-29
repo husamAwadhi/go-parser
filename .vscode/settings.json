@@ -1,0 +1,5 @@
+{
+    "yaml.schemas": {
+        "assets/schema.json": "assets/blueprints/*.yaml"
+    }
+}
