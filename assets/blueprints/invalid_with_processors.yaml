@@ -1,7 +1,7 @@
 version: "1.0"
 meta:
   file:
-    extension: xls
+    extension: xlsx
     name: "sample"
 blueprint:
   - name: header_info
@@ -25,7 +25,7 @@ blueprint:
     fields:
       - name: opening_balance
         position: 6
-        format: f%2
+        format: f2
   - name: transaction_table
     type: hit
     mandatory: true
@@ -48,16 +48,16 @@ blueprint:
         type: int
       - name: credit
         position: 6
-        format: d%2
+        format: f%
       - name: debit
         position: 7
-        format: s%2
+        format: "%2"
   - name: total
     type: next
     fields:
       - name: total_credit
         position: 6
-        format: f%2
+        format: ""
       - name: total_debit
         position: 7
-        format: f%2
+        format: 
