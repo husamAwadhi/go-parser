@@ -60,8 +60,8 @@ type Condition struct {
 }
 
 type FieldFormat struct {
-	Code    FieldFormatCodes `validate:"is-valid-field-format"`
-	Parameter string `validate:"required_with=Code"`
+	Code      FieldFormatCodes `validate:"is-valid-field-format"`
+	Parameter string           `validate:"required_with=Code"`
 }
 
 func (ff *FieldFormat) UnmarshalYAML(data []byte) error {
@@ -144,10 +144,23 @@ func newValidator() {
 	validate = validator.New()
 
 	validate.RegisterStructValidation(ConditionValidator, Condition{})
-	validate.RegisterValidation("is-supported-file", IsSupportedFile)
-	validate.RegisterValidation("is-valid-component-type", IsValidComponentType)
-	validate.RegisterValidation("is-valid-field-type", IsValidFieldType)
-	validate.RegisterValidation("is-valid-field-format", IsValidFieldFormat)
+
+	var validations = []struct {
+		name string
+		fn   validator.Func
+	}{
+		{"is-supported-file", IsSupportedFile},
+		{"is-valid-component-type", IsValidComponentType},
+		{"is-valid-field-type", IsValidFieldType},
+		{"is-valid-field-format", IsValidFieldFormat},
+	}
+
+	for _, validation := range validations {
+		err := validate.RegisterValidation(validation.name, validation.fn)
+		if err != nil {
+			panic(err)
+		}
+	}
 }
 
 func ConditionValidator(sl validator.StructLevel) {
