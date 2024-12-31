@@ -1,16 +1,18 @@
 version: "1.0"
 meta:
   file:
-    extension: xlsx
+    extension: exe
     name: "sample"
 blueprint:
-  - mandatory: true
-    type: miss
+  - name: header_info
+    mandatory: true
+    type: hit
     conditions:
       - column: [1]
-        is: "رقم الصندوق"
+        is: "Cashier Number"
     fields:
       - name: currency
+        type: int64
         position: 6
       - name: cashier
         position: 2

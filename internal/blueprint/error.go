@@ -43,7 +43,7 @@ func handleErrors(err []validator.FieldError) error {
 }
 
 func format(errors Errors) error {
-	formattedErrors := "Validation error(s):\n"
+	formattedErrors := fmt.Sprintf("Validation errors [count=%d]:\n", len(errors))
 	for _, e := range errors {
 		formattedErrors += fmt.Sprintf("  - %s\n\tValue: %s\n\tField(s): %s\n\tCode: %s\n", e.Message, e.Value, e.Namespace, e.Tag)
 	}

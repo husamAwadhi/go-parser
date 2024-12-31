@@ -1,7 +1,6 @@
 package blueprint
 
 import (
-	"fmt"
 	"os"
 	"strings"
 
@@ -9,12 +8,13 @@ import (
 	"github.com/goccy/go-yaml"
 )
 
-type FieldFormats string
+type FieldFormatCodes string
 
 const (
-	StringFormat FieldFormats = "s"
-	FloatFormat  FieldFormats = "f"
-	DateFormat   FieldFormats = "d"
+	StringCode  FieldFormatCodes = "s"
+	FloatCode   FieldFormatCodes = "f"
+	DateCode    FieldFormatCodes = "d"
+	DefaultCode FieldFormatCodes = "default"
 )
 
 type SupportedFiles string
@@ -60,31 +60,31 @@ type Condition struct {
 }
 
 type FieldFormat struct {
-	Format    FieldFormats
-	Parameter string
+	Code    FieldFormatCodes `validate:"is-valid-field-format"`
+	Parameter string `validate:"required_with=Code"`
 }
 
 func (ff *FieldFormat) UnmarshalYAML(data []byte) error {
-	if string(data) == "" {
+	if string(data) == "" || string(data) == "\"\"" {
 		return nil
 	}
 
 	format := strings.Split(string(data), "%")
 
-	if len(format) != 2 || len(format[1]) == 0 {
-		return fmt.Errorf("invalid Field Format format")
-	}
-
 	switch format[0] {
 	case "s":
-		ff.Format = StringFormat
+		ff.Code = StringCode
 	case "f":
-		ff.Format = FloatFormat
+		ff.Code = FloatCode
 	case "d":
-		ff.Format = DateFormat
+		ff.Code = DateCode
+	default:
+		ff.Code = DefaultCode
 	}
 
-	ff.Parameter = format[1]
+	if len(format) == 2 {
+		ff.Parameter = format[1]
+	}
 
 	return nil
 }
@@ -147,6 +147,7 @@ func newValidator() {
 	validate.RegisterValidation("is-supported-file", IsSupportedFile)
 	validate.RegisterValidation("is-valid-component-type", IsValidComponentType)
 	validate.RegisterValidation("is-valid-field-type", IsValidFieldType)
+	validate.RegisterValidation("is-valid-field-format", IsValidFieldFormat)
 }
 
 func ConditionValidator(sl validator.StructLevel) {
@@ -179,6 +180,14 @@ func IsValidComponentType(fl validator.FieldLevel) bool {
 func IsValidFieldType(fl validator.FieldLevel) bool {
 	switch fl.Field().String() {
 	case string(Int), string(Float), string(Bool), string(BoolStrict), string(Date), "":
+		return true
+	}
+	return false
+}
+
+func IsValidFieldFormat(fl validator.FieldLevel) bool {
+	switch fl.Field().String() {
+	case string(StringCode), string(FloatCode), string(DateCode), "":
 		return true
 	}
 	return false

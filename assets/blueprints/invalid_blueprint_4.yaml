@@ -3,17 +3,28 @@ meta:
   file:
     extension: xlsx
 blueprint:
-  - mandatory: true
+  - name: header_info
+    mandatory: true
     type: hit
     conditions:
       - column: [1]
-        is: "رقم الصندوق"
+        is: "Cashier Number"
     fields:
       - name: currency
         position: 6
       - name: cashier
         position: 2
-  - type: hit
+  - name: balance_info
+    type: hit
+    mandatory: true
+    conditions:
+      - column: [4]
+        is: "Open Balance"
+    fields:
+      - name: opening_balance
+        position: 6
+  - name: transaction_table
+    type: hit
     mandatory: true
     table: true
     conditions:
@@ -24,17 +35,18 @@ blueprint:
         position: 1
       - name: type
         position: 2
-      - name: document number
+      - name: document_number
         position: 3
       - name: description
         position: 4
-      - name: reference number
+      - name: reference_number
         position: 5
       - name: credit
         position: 6
       - name: debit
         position: 7
-  - type: next
+  - name: total
+    type: next
     fields:
       - name: total_credit
         position: 6
