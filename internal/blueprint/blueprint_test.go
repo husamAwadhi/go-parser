@@ -5,6 +5,7 @@ import (
 	"path"
 	"testing"
 
+	"github.com/go-playground/validator/v10"
 	"github.com/husamAwadhi/go-parser/internal/blueprint"
 	"github.com/stretchr/testify/assert"
 )
@@ -117,4 +118,12 @@ func TestErrorOnInvalidBlueprint(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestValidatorRegisterPanic(t *testing.T) {
+	assert.Panics(t, func() {
+		blueprint.NewValidator([]blueprint.ValidationRule{
+			{"", func(fl validator.FieldLevel) bool { return true }},
+		})
+	})
 }

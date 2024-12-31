@@ -2,10 +2,12 @@ package blueprint
 
 import (
 	"os"
+	"slices"
 	"strings"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/goccy/go-yaml"
+	errorHandler "github.com/husamAwadhi/go-parser/internal/error"
 )
 
 type FieldFormatCodes string
@@ -112,6 +114,11 @@ type Blueprint struct {
 	Components []*Components `yaml:"blueprint" validate:"required,dive"`
 }
 
+type ValidationRule struct {
+	Name string
+	Fn   validator.Func
+}
+
 var validate *validator.Validate
 
 func CreateBlueprintFromFile(fileDirectory string) (*Blueprint, error) {
@@ -131,32 +138,31 @@ func CreateBlueprintFromBytes(yml []byte) (*Blueprint, error) {
 		return nil, err
 	}
 
-	newValidator()
+	if validate == nil {
+		NewValidator([]ValidationRule{})
+	}
 
 	if err := validate.Struct(blueprint); err != nil {
-		return nil, handleErrors(err.(validator.ValidationErrors))
+		return nil, errorHandler.HandleValidatorErrors(err.(validator.ValidationErrors))
 	}
 
 	return &blueprint, nil
 }
 
-func newValidator() {
+func NewValidator(extraRules []ValidationRule) {
 	validate = validator.New()
 
 	validate.RegisterStructValidation(ConditionValidator, Condition{})
 
-	var validations = []struct {
-		name string
-		fn   validator.Func
-	}{
+	var validations = slices.Concat([]ValidationRule{
 		{"is-supported-file", IsSupportedFile},
 		{"is-valid-component-type", IsValidComponentType},
 		{"is-valid-field-type", IsValidFieldType},
 		{"is-valid-field-format", IsValidFieldFormat},
-	}
+	}, extraRules)
 
 	for _, validation := range validations {
-		err := validate.RegisterValidation(validation.name, validation.fn)
+		err := validate.RegisterValidation(validation.Name, validation.Fn)
 		if err != nil {
 			panic(err)
 		}

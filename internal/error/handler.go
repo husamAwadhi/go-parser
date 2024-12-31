@@ -1,4 +1,4 @@
-package blueprint
+package error
 
 import (
 	"fmt"
@@ -22,7 +22,7 @@ type fieldError struct {
 
 type Errors []fieldError
 
-func handleErrors(err []validator.FieldError) error {
+func HandleValidatorErrors(err []validator.FieldError) error {
 
 	var errors Errors
 	for _, e := range err {
